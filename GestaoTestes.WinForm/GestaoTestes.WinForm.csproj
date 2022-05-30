@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GestaoTestes.Arquivos\GestaoTestes.Infra.Arquivos.csproj" />
+    <ProjectReference Include="..\GestaoTestes.Dominio\GestaoTestes.Dominio.csproj" />
+    <ProjectReference Include="..\GestaoTestes.Infra.BancoDados\GestaoTestes.Infra.BancoDados.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ModuloMatéria\TabelaMateriaControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="ModuloTeste\TabelaTesteControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>
