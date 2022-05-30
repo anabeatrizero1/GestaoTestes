@@ -37,6 +37,19 @@ namespace GestaoTestes.Infra.BancoDados.ModuloQuestao
                 @Enunciado
             ); SELECT SCOPE_IDENTITY();";
 
+        private const string sqlEditar = 
+            @"UPDATE [TBQUESTAO]
+                SET
+	                   [Disciplina_Numero] = @DISCIPLINA_NUMERO,
+                       [Materia_Numero] = @MATERIA_NUMERO,
+                       [Enunciado] = @ENUNCIADO
+                 WHERE 
+	                   [NUMERO] = @NUMERO";
+
+        private const string sqlExcluir =
+           @"DELETE FROM [TBQUESTAO]
+		        WHERE
+	                [NUMERO] = @NUMERO";
 
         private const string sqlSelecionarTodos =
            @"SELECT 
@@ -51,6 +64,24 @@ namespace GestaoTestes.Infra.BancoDados.ModuloQuestao
                 [TBQUESTAO] AS Q INNER JOIN 
 	            [TBDisciplina] AS D ON Q.[DISCIPLINA_NUMERO] = D.Numero INNER JOIN
 	            [TBMateria] AS M ON Q.[MATERIA_NUMERO] = M.NUMERO";
+
+        private const string sqlSelecionarPorNumero =
+            @"SELECT 
+                Q.[NUMERO],
+                Q.[ENUNCIADO],
+                Q.[DISCIPLINA_NUMERO],
+                D.[NOME] AS DISCIPLINA_NOME,
+                Q.[MATERIA_NUMERO],
+                M.[NOME] AS MATERIA_NOME,
+                M.[SERIE]
+            FROM
+                [TBQUESTAO] AS Q INNER JOIN 
+	            [TBDisciplina] AS D ON Q.[DISCIPLINA_NUMERO] = D.Numero INNER JOIN
+	            [TBMateria] AS M ON Q.[MATERIA_NUMERO] = M.NUMERO
+            WHERE 
+                Q.[NUMERO] = @NUMERO";
+
+
 
         public ValidationResult Inserir(Questao novoRegistro)
         {
@@ -80,12 +111,45 @@ namespace GestaoTestes.Infra.BancoDados.ModuloQuestao
         
         public ValidationResult Editar(Questao registro)
         {
-            throw new NotImplementedException();
+            var validador = new ValidadorQuestao();
+
+            var resultadoValidacao = validador.Validate(registro);
+
+            if (resultadoValidacao.IsValid == false)
+                return resultadoValidacao;
+
+            SqlConnection conexaoComBanco = new SqlConnection(enderecoBanco);
+
+            SqlCommand comandoEdicao = new SqlCommand(sqlEditar, conexaoComBanco);
+
+            ConfigurarParametrosQuestao(registro, comandoEdicao);
+
+            conexaoComBanco.Open();
+            comandoEdicao.ExecuteNonQuery();
+            conexaoComBanco.Close();
+
+            return resultadoValidacao;
         }
 
         public ValidationResult Excluir(Questao registro)
         {
-            throw new NotImplementedException();
+            SqlConnection conexaoComBanco = new SqlConnection(enderecoBanco);
+
+            SqlCommand comandoExclusao = new SqlCommand(sqlExcluir, conexaoComBanco);
+
+            comandoExclusao.Parameters.AddWithValue("NUMERO", registro.Numero);
+
+            conexaoComBanco.Open();
+            int numeroRegistrosExcluidos = comandoExclusao.ExecuteNonQuery();
+
+            var resultadoValidacao = new ValidationResult();
+
+            if (numeroRegistrosExcluidos == 0)
+                resultadoValidacao.Errors.Add(new ValidationFailure("", "Não foi possível remover o registro"));
+
+            conexaoComBanco.Close();
+
+            return resultadoValidacao;
         }
 
         public void AdicionarAlternativas(Questao questaoSelecionada, List<Alternativa> alternativas)
