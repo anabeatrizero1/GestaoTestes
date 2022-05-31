@@ -42,6 +42,11 @@ namespace GestaoTestes.WinForm.ModuloQuestao
                 cmbDisciplinas.SelectedItem = questao.Disciplina;
 
                 txtEnunciado.Text = questao.Enunciado;
+
+                foreach (var item in questao.alternativas)
+                {
+                    listAlternativas.Items.Add(item);
+                }
             }
         }
 

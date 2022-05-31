@@ -21,6 +21,7 @@ namespace GestaoTestes.WinForm.ModuloTeste
         private readonly IRepositorioDisciplina repositorioDisciplina;
         private readonly IRepositorioQuestao repositorioQuestao;
 
+
         public ControladorTeste(IRepositorioTeste repositorioTeste,
             IRepositorioDisciplina repositorioDisciplina, 
             IRepositorioMateria repositorioMateria,
@@ -73,7 +74,7 @@ namespace GestaoTestes.WinForm.ModuloTeste
 
             if (testeSelecionado == null)
             {
-                MessageBox.Show("Nenhuma teste registrado no momento.",
+                MessageBox.Show("Selecione um teste primeiroS.",
                 "Edição de Questões", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
@@ -102,7 +103,7 @@ namespace GestaoTestes.WinForm.ModuloTeste
 
             if (testeSelecionado == null)
             {
-                MessageBox.Show("Nenhuma teste registrado no momento.",
+                MessageBox.Show("Selecione um teste primeiro.",
                 "Exclusão de Teste", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
@@ -115,6 +116,7 @@ namespace GestaoTestes.WinForm.ModuloTeste
                 CarregarTestes();
             }
         }
+
 
         #region Métodos Privadas
         private Teste ObterTesteSelecionado()

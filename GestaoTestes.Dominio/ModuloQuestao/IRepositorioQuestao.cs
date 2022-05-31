@@ -5,7 +5,7 @@ namespace GestaoTestes.Dominio.ModuloQuestao
 {
     public interface IRepositorioQuestao : IRepositorio<Questao>
     {
-        void AdicionarAlternativas(Questao questaoSelecionada, List<Alternativa> alternativas);
+        void AdicionarAlternativas(Questao questaoSelecionada);
 
     }
 }

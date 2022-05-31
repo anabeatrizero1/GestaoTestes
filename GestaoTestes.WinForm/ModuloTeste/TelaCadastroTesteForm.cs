@@ -18,9 +18,9 @@ namespace GestaoTestes.WinForm.ModuloTeste
     public partial class TelaCadastroTesteForm : Form
     {
         private Teste teste;
-        private List<Questao> questoesDoTeste;
-
         private List<Materia> materias;
+        private List<Questao> questoesDoTeste;
+        private List<Disciplina> disciplinas;
         private List<Questao> todasQuestoes;
 
 
@@ -28,10 +28,13 @@ namespace GestaoTestes.WinForm.ModuloTeste
         {
             InitializeComponent();
 
-            CarregarDisciplinas(disciplinas);
+            this.disciplinas = disciplinas;
             this.materias = materias;
             this.todasQuestoes = questoes;
             this.dataCriacao.Value = DateTime.Now;
+
+            CarregarDisciplinas(this.disciplinas);
+
         }
 
         public Func<Teste, ValidationResult> GravarRegistro { get; set; }
@@ -50,16 +53,6 @@ namespace GestaoTestes.WinForm.ModuloTeste
             }
         }
 
-        private void CarregarDisciplinas(List<Disciplina> disciplinas)
-        {
-            cmbDisciplinas.Items.Clear();
-
-            foreach (var item in disciplinas)
-            {
-                cmbDisciplinas.Items.Add(item);
-            }
-        }
-
         private void TelaCadastroTesteForm_Load(object sender, EventArgs e)
         {
             TelaPrincipalForm.Instancia.AtualizarRodape("");
@@ -71,21 +64,7 @@ namespace GestaoTestes.WinForm.ModuloTeste
             CarregarMaterias(disciplinaSelecionada);
         }
 
-        private void CarregarMaterias(Disciplina disciplinaSelecionada)
-        {
-            List<Materia> materiasDaDisciplina = materias.Where(m => m.Disciplina.Equals(disciplinaSelecionada)).ToList();
-
-            cmbMateria.Items.Clear();
-
-            foreach (var item in materiasDaDisciplina)
-            {
-                cmbMateria.Items.Add(item);
-            }
-            //numericQtdQuestoes.Enabled = true;
-            //numericQtdQuestoes.Maximum = materias
-            //    .Where(m => m.Disciplina.Equals(disciplinaSelecionada))
-            //    .ToList().Count();
-        }
+       
 
         private void checkProvaRecuperacao_CheckedChanged(object sender, EventArgs e)
         {
@@ -182,6 +161,27 @@ namespace GestaoTestes.WinForm.ModuloTeste
 
             numericQtdQuestoes.Maximum = qtdquestoes;
                    
+
+        }
+        private void CarregarDisciplinas(List<Disciplina> disciplinas)
+        {
+            cmbDisciplinas.Items.Clear();
+
+            foreach (var item in disciplinas)
+            {
+                cmbDisciplinas.Items.Add(item);
+            }
+        }
+        private void CarregarMaterias(Disciplina disciplinaSelecionada)
+        {
+            List<Materia> materiasDaDisciplina = materias.Where(m => m.Disciplina.Equals(disciplinaSelecionada)).ToList();
+
+            cmbMateria.Items.Clear();
+
+            foreach (var item in materiasDaDisciplina)
+            {
+                cmbMateria.Items.Add(item);
+            }
 
         }
     }

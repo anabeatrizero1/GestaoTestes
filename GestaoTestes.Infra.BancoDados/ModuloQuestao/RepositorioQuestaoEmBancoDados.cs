@@ -81,6 +81,34 @@ namespace GestaoTestes.Infra.BancoDados.ModuloQuestao
             WHERE 
                 Q.[NUMERO] = @NUMERO";
 
+        private const string sqlAdicionarAlternativa = @"
+            INSERT INTO [TBALTERNATIVA]
+           (
+		       [DESCRICAO],
+               [ALTARNATIVACORRETA],
+               [LETRA],
+               [NUMERO_QUESTAO]
+		   )
+            VALUES
+           (
+		       @DESCRICAO, 
+               @ALTARNATIVACORRETA, 
+               @LETRA,
+               @NUMERO_QUESTAO
+		   ); SELECT SCOPE_IDENTITY();";
+
+        private const string sqlSelecionarAlternativa =
+            @"SELECT 
+	             [NUMERO],
+                 [DESCRICAO],
+                 [ALTERNATIVACORRETA],
+                 [LETRA],
+                 [NUMERO_QUESTAO]
+             FROM 
+                [TBALTERNATIVA] 
+             WHERE
+                [NUMERO_QUESTAO] = @NUMERO_QUESTAO";
+
 
 
         public ValidationResult Inserir(Questao novoRegistro)
@@ -152,14 +180,51 @@ namespace GestaoTestes.Infra.BancoDados.ModuloQuestao
             return resultadoValidacao;
         }
 
-        public void AdicionarAlternativas(Questao questaoSelecionada, List<Alternativa> alternativas)
+        public void AdicionarAlternativas(Questao questaoSelecionada)
         {
-            throw new NotImplementedException();
+
+            SqlConnection conexaoComBanco = new SqlConnection(enderecoBanco);
+            conexaoComBanco.Open();
+           
+            foreach (var item in questaoSelecionada.alternativas)
+            {
+                SqlCommand comando = new SqlCommand(sqlAdicionarAlternativa, conexaoComBanco);
+
+                comando.Parameters.AddWithValue("DESCRICAO", item);
+                comando.Parameters.AddWithValue("ALTARNATIVACORRETA", item.AlternativaCorreta);
+                comando.Parameters.AddWithValue("LETRA", item.Letra);
+                comando.Parameters.AddWithValue("DISCIPLINA_NUMERO", questaoSelecionada.Numero);
+
+                var id = comando.ExecuteScalar();
+                item.Numero = Convert.ToInt32(id);
+
+                Editar(questaoSelecionada);
+            }
+            conexaoComBanco.Close();
+
         }
 
         public Questao SelecionarPorNumero(int numero)
         {
-            throw new NotImplementedException();
+            SqlConnection conexaoComBanco = new SqlConnection(enderecoBanco);
+
+            SqlCommand comandoSelecao = new SqlCommand(sqlSelecionarPorNumero, conexaoComBanco);
+
+            comandoSelecao.Parameters.AddWithValue("NUMERO", numero);
+
+            conexaoComBanco.Open();
+            SqlDataReader leitorQuestao = comandoSelecao.ExecuteReader();
+
+            Questao questao = null;
+            if (leitorQuestao.Read())
+                questao = ConverterParaQuestao(leitorQuestao);
+
+            conexaoComBanco.Close();
+
+            CarregarAlternativaQuestao(questao);
+
+            return questao;
+
         }
 
 
@@ -184,6 +249,43 @@ namespace GestaoTestes.Infra.BancoDados.ModuloQuestao
             conexaoComBanco.Close();
 
             return questoes;
+        }
+        private void CarregarAlternativaQuestao(Questao questao)
+        {
+            SqlConnection conexaoComBanco = new SqlConnection(enderecoBanco);
+
+            SqlCommand comandoSelecao = new SqlCommand(sqlSelecionarAlternativa, conexaoComBanco);
+
+            comandoSelecao.Parameters.AddWithValue("NUMERO_QUESTAO", questao.Numero);
+
+            conexaoComBanco.Open();
+            SqlDataReader leitorAlternativa = comandoSelecao.ExecuteReader();
+
+
+            while (leitorAlternativa.Read())
+            {
+                Alternativa alternativa = ConverterParaAlternativa(leitorAlternativa);
+
+                questao.AdicionarAlternativa(alternativa);
+            }
+
+            conexaoComBanco.Close();
+        }
+
+        private Alternativa ConverterParaAlternativa(SqlDataReader leitorAlternativa)
+        {
+            var descricao = Convert.ToString(leitorAlternativa["DESCRICAO"]);
+            var alternativaCorreta = Convert.ToBoolean(leitorAlternativa["ALTERNATIVACORRETA"]);
+            var letra = Convert.ToChar(leitorAlternativa["LETRA"]);
+
+            var altenativa = new Alternativa
+            {
+                Descricao = descricao,
+                AlternativaCorreta = alternativaCorreta,
+                Letra = letra
+            };
+            return altenativa;
+
         }
 
         private Questao ConverterParaQuestao(SqlDataReader leitorQuestao)

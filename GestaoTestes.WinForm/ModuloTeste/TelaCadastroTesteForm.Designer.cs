@@ -44,7 +44,6 @@
             this.listQuestoes = new System.Windows.Forms.ListBox();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnGravar = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericQtdQuestoes)).BeginInit();
             this.SuspendLayout();
             // 
@@ -202,22 +201,11 @@
             this.btnGravar.UseVisualStyleBackColor = true;
             this.btnGravar.Click += new System.EventHandler(this.btnGravar_Click);
             // 
-            // button1
-            // 
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(29, 402);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(153, 41);
-            this.button1.TabIndex = 38;
-            this.button1.Text = "Sortear Questões";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // TelaCadastroTesteForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(585, 455);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGravar);
             this.Controls.Add(this.listQuestoes);
@@ -265,6 +253,5 @@
         private System.Windows.Forms.ListBox listQuestoes;
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnGravar;
-        private System.Windows.Forms.Button button1;
     }
 }

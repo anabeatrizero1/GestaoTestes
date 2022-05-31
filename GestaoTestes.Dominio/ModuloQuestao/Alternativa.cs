@@ -9,7 +9,7 @@ namespace GestaoTestes.Dominio.ModuloQuestao
         public int Numero { get; set; }
         public string Descricao { get; set; }
 
-        public bool AlternativaCorreta { get; private set; }
+        public bool AlternativaCorreta { get; set; }
         public char Letra { get; set; }
         public Questao Questao { get; set; }
 

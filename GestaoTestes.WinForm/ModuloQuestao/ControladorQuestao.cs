@@ -67,6 +67,7 @@ namespace GestaoTestes.WinForm.ModuloQuestao
             if (resultado == DialogResult.OK)
             {
                 CarregarQuestoes();
+                
             }
         }
 
@@ -114,12 +115,14 @@ namespace GestaoTestes.WinForm.ModuloQuestao
 
         private void CarregarQuestoes()
         {
+
             List<Questao> questoes = repositorioQuestao.SelecionarTodos();
 
             tabelaQuestoes.AtualizarRegistros(questoes);
 
             TelaPrincipalForm.Instancia.AtualizarRodape($"Visualizando {questoes.Count} questão(ões)");
         }
+        
         #endregion
     }
 }

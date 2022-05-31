@@ -14,9 +14,9 @@ namespace GestaoTestes.Arquivos.ModuloQuestao
         {
         }
 
-        public void AdicionarAlternativas(Questao questaoSelecionada, List<Alternativa> alternativas)
+        public void AdicionarAlternativas(Questao questaoSelecionada)
         {
-            foreach (var alternativa in alternativas)
+            foreach (var alternativa in questaoSelecionada.alternativas)
             {
                 questaoSelecionada.AdicionarAlternativa(alternativa);
             }
